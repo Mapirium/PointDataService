@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/mapirium
+    username: ${dbuser}
+    password: ${dbpassword}
+    driver-class-name: com.mysql.jdbc.Driver
+    test-on-borrow: true
+    validation-query: select 1
+  jpa:
+    show-sql: true
+    hibernate:
+      # Nötig, damit die Spaltennamen in Camel-Case geschrieben werden können
+#      naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database-platform: org.hibernate.spatial.dialect.mysql.MySQLSpatialDialect
+  application:
+    name: PointDataService
+
+liquibase:
+  change-log: classpath:/db/changelog/pointdata/changelog.xml
+  default-schema: mapirium
+eureka:
+  client:
+    service-url:
+      defaultZone: ${vcap.services.eureka-service.credentials.uri:http://127.0.0.1:8761}/eureka/
