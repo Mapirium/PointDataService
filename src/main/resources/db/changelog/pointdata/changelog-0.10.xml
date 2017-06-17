@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:spatial="http://www.liquibase.org/xml/ns/dbchangelog-ext/liquibase-spatial"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet id="1" author="surech">
+        <createTable tableName="pointdata" remarks="Repräsentiert einen konkreten Punkt auf der Karte">
+            <column name="ID" type="BIGINT" autoIncrement="true" remarks="Technischer Primärschlüssel">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="PUBLIC_ID" type="varchar(50)" remarks="Öffentlicher Schlüssel">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="POINT_DEFINITION_ID" type="varchar(50)" remarks="Öffentlicher Schlüssel der Punkt-Definition">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="MAP_ID" type="varchar(50)" remarks="Öffentlicher Schlüssel der Karte, zu welchem dieser Punkt gehört.">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCATION" type="geometry">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="createdAt" type="DATETIME">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="2" author="surech">
+        <preConditions>
+            <dbms type="mysql"/>
+        </preConditions>
+        <sql>ALTER TABLE mapirium.pointdata ENGINE=MyISAM</sql>
+    </changeSet>
+
+    <changeSet id="3" author="surech">
+        <spatial:createSpatialIndex tableName="pointdata" indexName="pointdata_location_idx">
+            <column name="location"/>
+        </spatial:createSpatialIndex>
+    </changeSet>
+
+    <changeSet id="4" author="surech">
+        <createTable tableName="fielddata" remarks="Enthält die Daten eines spezifischen Feldes">
+            <column name="ID" type="BIGINT" autoIncrement="true" remarks="Technischer Primärschlüssel">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="PUBLIC_ID" type="varchar(50)" remarks="Öffentlicher Schlüssel">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="POINTDATA_FK" type="BIGINT" remarks="Fremdschlüssel auf den Punkt, zu welchem dieses Feld gehört">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="VALUE" type="varchar(1024)" remarks="Wert des Feldes">
+                <constraints nullable="true" unique="false"/>
+            </column>
+        </createTable>
+
+        <sql>ALTER TABLE mapirium.fielddata ENGINE=MyISAM</sql>
+
+        <addForeignKeyConstraint baseTableName="fielddata" baseColumnNames="POINTDATA_FK"
+                                 constraintName="point_field_fk"
+                                 referencedTableName="pointdata"
+                                 referencedColumnNames="id" />
+    </changeSet>
+
+    <changeSet id="5" author="surech">
+        <addColumn tableName="fielddata">
+            <column name="FIELD_DEFINITION_ID" type="varchar(50)" remarks="Öffentlicher Schlüssel zur Definition dieses Feldes">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="6" author="surech">
+        <addColumn tableName="fielddata">
+            <column name="createdAt" type="DATETIME">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
