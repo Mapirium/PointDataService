@@ -2,6 +2,7 @@ package ch.mapirium.server.pointdata.rest.model;
 
 import ch.mapirium.server.pointdata.model.PointDataEntity;
 import ch.mapirium.server.pointdata.rest.controller.PointDataRestController;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -22,6 +23,8 @@ public class PointDataMapper {
 
         // Link auf uns selbst
         result.add(linkTo(methodOn(PointDataRestController.class).getByPublicId(entity.getMapId(), entity.getPublicId())).withSelfRel());
+        result.add(new Link("/map/" + entity.getMapId() + "/point/" + entity.getPublicId() + "/field", "fields"));
+
 
         return result;
     }

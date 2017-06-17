@@ -3,13 +3,14 @@ package ch.mapirium.server.pointdata.rest.controller;
 import ch.mapirium.server.common.springmvc.exceptions.NotFoundException;
 import ch.mapirium.server.pointdata.model.PointDataEntity;
 import ch.mapirium.server.pointdata.repo.PointDataRepository;
+import ch.mapirium.server.pointdata.rest.model.PointDataListMapper;
+import ch.mapirium.server.pointdata.rest.model.PointDataListResource;
 import ch.mapirium.server.pointdata.rest.model.PointDataMapper;
 import ch.mapirium.server.pointdata.rest.model.PointDataResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * REST-Schnittstelle für die Daten eines Punktes
@@ -24,13 +25,16 @@ public class PointDataRestController {
     @Autowired
     private PointDataMapper pointDataMapper;
 
+    @Autowired
+    private PointDataListMapper pointDataListMapper;
+
     @RequestMapping(method = RequestMethod.GET)
-    public List<PointDataResource> getAll(@PathVariable("mapId") String mapId) {
+    public PointDataListResource getAll(@PathVariable("mapId") String mapId) {
         // Daten laden
         List<PointDataEntity> data = pointDataRepository.findByMapId(mapId);
 
         // Umwandeln
-        List<PointDataResource> result = data.stream().map(pointDataMapper::fromEntity).collect(Collectors.toList());
+        PointDataListResource result = pointDataListMapper.fromEntity(data, mapId);
         return result;
     }
 
