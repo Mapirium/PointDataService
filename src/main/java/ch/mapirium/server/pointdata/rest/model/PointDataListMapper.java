@@ -21,8 +21,8 @@ public class PointDataListMapper {
     @Autowired
     private PointDataMapper pointDataMapper;
 
-    public PointDataListResource fromEntity(Iterable<PointDataEntity> entities, String mapId) {
-        PointDataListResource result = new PointDataListResource();
+    public GenericDataListResource fromEntity(Iterable<PointDataEntity> entities, String mapId) {
+        GenericDataListResource result = new GenericDataListResource();
         result.add(linkTo(methodOn(PointDataRestController.class).getAll(mapId)).withSelfRel());
 
         // Die einzelnen Entitäten mappen

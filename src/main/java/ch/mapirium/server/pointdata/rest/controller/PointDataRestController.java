@@ -4,7 +4,7 @@ import ch.mapirium.server.common.springmvc.exceptions.NotFoundException;
 import ch.mapirium.server.pointdata.model.PointDataEntity;
 import ch.mapirium.server.pointdata.repo.PointDataRepository;
 import ch.mapirium.server.pointdata.rest.model.PointDataListMapper;
-import ch.mapirium.server.pointdata.rest.model.PointDataListResource;
+import ch.mapirium.server.pointdata.rest.model.GenericDataListResource;
 import ch.mapirium.server.pointdata.rest.model.PointDataMapper;
 import ch.mapirium.server.pointdata.rest.model.PointDataResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +29,12 @@ public class PointDataRestController {
     private PointDataListMapper pointDataListMapper;
 
     @RequestMapping(method = RequestMethod.GET)
-    public PointDataListResource getAll(@PathVariable("mapId") String mapId) {
+    public GenericDataListResource getAll(@PathVariable("mapId") String mapId) {
         // Daten laden
         List<PointDataEntity> data = pointDataRepository.findByMapId(mapId);
 
         // Umwandeln
-        PointDataListResource result = pointDataListMapper.fromEntity(data, mapId);
+        GenericDataListResource result = pointDataListMapper.fromEntity(data, mapId);
         return result;
     }
 
