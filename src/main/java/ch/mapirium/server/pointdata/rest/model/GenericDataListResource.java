@@ -3,7 +3,7 @@ package ch.mapirium.server.pointdata.rest.model;
 import ch.mapirium.server.common.springmvc.rest.HalResource;
 
 /**
- * Hülle für eine Liste von Punkt-Daten
+ * Hülle für eine Liste von Daten
  */
-public class PointDataListResource extends HalResource {
+public class GenericDataListResource extends HalResource {
 }
