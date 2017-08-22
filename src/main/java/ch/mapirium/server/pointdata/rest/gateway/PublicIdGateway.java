@@ -14,8 +14,8 @@ public class PublicIdGateway {
     @Autowired
     private RestTemplate restTemplate;
 
-    public PublicIdResource createNewPublicId(){
-        ResponseEntity<PublicIdResource> exchange = restTemplate.postForEntity("http://publicidservice/publicId/PO", "Test", PublicIdResource.class);
+    public PublicIdResource createNewPublicId(PublicIdGroup group){
+        ResponseEntity<PublicIdResource> exchange = restTemplate.postForEntity("http://publicidservice/publicId/" + group.getPrefix(), "Test", PublicIdResource.class);
         return exchange.getBody();
     }
 }

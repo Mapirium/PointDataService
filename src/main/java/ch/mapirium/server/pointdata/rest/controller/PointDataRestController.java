@@ -1,6 +1,7 @@
 package ch.mapirium.server.pointdata.rest.controller;
 
 import ch.mapirium.server.common.springmvc.exceptions.NotFoundException;
+import ch.mapirium.server.pointdata.Service.PointDataService;
 import ch.mapirium.server.pointdata.model.PointDataEntity;
 import ch.mapirium.server.pointdata.repo.PointDataRepository;
 import ch.mapirium.server.pointdata.rest.model.PointDataListMapper;
@@ -21,6 +22,9 @@ public class PointDataRestController {
 
     @Autowired
     private PointDataRepository pointDataRepository;
+
+    @Autowired
+    private PointDataService pointDataService;
 
     @Autowired
     private PointDataMapper pointDataMapper;
@@ -62,7 +66,7 @@ public class PointDataRestController {
         PointDataEntity entity = pointDataMapper.toEntity(pointData);
 
         // Speichern
-        PointDataEntity savedEntity = pointDataRepository.save(entity);
+        PointDataEntity savedEntity = pointDataService.createPointData(entity);
 
         // Mappen und zurückgeben
         PointDataResource result = pointDataMapper.fromEntity(savedEntity);
