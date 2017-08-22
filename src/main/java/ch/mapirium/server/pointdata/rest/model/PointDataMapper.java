@@ -20,6 +20,7 @@ public class PointDataMapper {
         result.setMapId(entity.getMapId());
         result.setPointDefinitionId(entity.getPointDefinitionId());
         result.setLocation(entity.getLocation());
+        result.setCreatedAt(entity.getCreatedAt());
 
         // Link auf uns selbst
         result.add(linkTo(methodOn(PointDataRestController.class).getByPublicId(entity.getMapId(), entity.getPublicId())).withSelfRel());
