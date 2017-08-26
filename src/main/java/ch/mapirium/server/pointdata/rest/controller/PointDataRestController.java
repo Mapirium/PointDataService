@@ -1,6 +1,8 @@
 package ch.mapirium.server.pointdata.rest.controller;
 
+import ch.mapirium.server.common.springmvc.exceptions.BadRequestException;
 import ch.mapirium.server.common.springmvc.exceptions.NotFoundException;
+import ch.mapirium.server.pointdata.Service.GeometryService;
 import ch.mapirium.server.pointdata.Service.PointDataService;
 import ch.mapirium.server.pointdata.model.PointDataEntity;
 import ch.mapirium.server.pointdata.repo.PointDataRepository;
@@ -8,9 +10,11 @@ import ch.mapirium.server.pointdata.rest.model.PointDataListMapper;
 import ch.mapirium.server.pointdata.rest.model.GenericDataListResource;
 import ch.mapirium.server.pointdata.rest.model.PointDataMapper;
 import ch.mapirium.server.pointdata.rest.model.PointDataResource;
+import com.vividsolutions.jts.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -31,6 +35,9 @@ public class PointDataRestController {
 
     @Autowired
     private PointDataListMapper pointDataListMapper;
+
+    @Autowired
+    private GeometryService geometryService;
 
     @RequestMapping(method = RequestMethod.GET)
     public GenericDataListResource getAll(@PathVariable("mapId") String mapId) {
@@ -70,6 +77,24 @@ public class PointDataRestController {
 
         // Mappen und zurückgeben
         PointDataResource result = pointDataMapper.fromEntity(savedEntity);
+        return result;
+    }
+
+    // Der Regex muss in den Path rein, weil Spring sonst die Location nach dem letzten Punkt abschneidet.
+    @RequestMapping(path = "/search/area/{location:.+}", method = RequestMethod.GET)
+    public GenericDataListResource findInArea(@PathVariable("mapId") String mapId, @PathVariable("location") String location){
+        // Parameter parsen
+        Geometry area = null;
+        try {
+            area = geometryService.parseArea(location);
+        } catch (IllegalArgumentException | ParseException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+
+        // Punkte suchen
+        List<PointDataEntity> entities = pointDataRepository.findWithing(area);
+        GenericDataListResource result = pointDataListMapper.fromEntity(entities, mapId);
+
         return result;
     }
 }
