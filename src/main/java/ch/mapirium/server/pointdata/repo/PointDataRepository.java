@@ -19,6 +19,6 @@ public interface PointDataRepository extends CrudRepository<PointDataEntity, Lon
     @Query("SELECT p FROM PointDataEntity p WHERE p.mapId = :mapId")
     public List<PointDataEntity> findByMapId(@Param("mapId") String mapId);
 
-    @Query("SELECT p FROM PointDataEntity p WHERE within(p.location, :area) = true")
-    List<PointDataEntity> findWithing(@Param("area") Geometry area);
+    @Query("SELECT p FROM PointDataEntity p WHERE p.mapId = :mapId and within(p.location, :area) = true")
+    List<PointDataEntity> findWithing(@Param("mapId") String mapId, @Param("area") Geometry area);
 }
