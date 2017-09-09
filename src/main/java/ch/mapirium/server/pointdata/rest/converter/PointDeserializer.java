@@ -40,7 +40,7 @@ public class PointDeserializer extends JsonDeserializer<Point> {
         }
 
         // Punkt erstellen
-        Point result = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+        Point result = geometryFactory.createPoint(new Coordinate(latitude, longitude));
         return result;
     }
 }

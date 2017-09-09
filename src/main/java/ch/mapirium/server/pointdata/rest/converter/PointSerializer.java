@@ -18,8 +18,8 @@ public class PointSerializer extends JsonSerializer<Point> {
     @Override
     public void serialize(Point point, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeNumberField(LONGITUDE_KEY, point.getX());
-        jsonGenerator.writeNumberField(LATITUDE_KEY, point.getY());
+        jsonGenerator.writeNumberField(LATITUDE_KEY, point.getX());
+        jsonGenerator.writeNumberField(LONGITUDE_KEY, point.getY());
         jsonGenerator.writeEndObject();
     }
 }
