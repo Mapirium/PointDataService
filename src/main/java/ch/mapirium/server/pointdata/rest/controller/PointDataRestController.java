@@ -92,7 +92,7 @@ public class PointDataRestController {
         }
 
         // Punkte suchen
-        List<PointDataEntity> entities = pointDataRepository.findWithing(area);
+        List<PointDataEntity> entities = pointDataRepository.findWithing(mapId, area);
         GenericDataListResource result = pointDataListMapper.fromEntity(entities, mapId);
 
         return result;
